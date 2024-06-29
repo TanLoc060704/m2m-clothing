@@ -1,16 +1,16 @@
 server:
-  port: 8083
+  port: 8080
 spring:
   application:
     name: clothing
   datasource:
     driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    password: root
-    url: jdbc:sqlserver://localhost:1433;databaseName=m2m_clothing;encrypt=false;trustServerCertificate=true;
-    username: sa
+    password: Tanloc0607@
+    url: jdbc:sqlserver://tanlocclothing.database.windows.net:1433;database=tanlocclothing;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+    username: tanlocadmin
   mail:
     host: smtp.gmail.com
-    password: hfil awpd dsou xkmb
+    password: oanxsumpkcoisyrx
     port: 587
     properties:
       mail:
@@ -24,8 +24,8 @@ spring:
       client:
         registration:
           google:
-            client-id:
-            client-secret:
+            client-id: 321877704749-2v71bd2jvjvhg1qs8ntnlokcbv3qb4el.apps.googleusercontent.com
+            client-secret: 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
             scope:
               - email
               - profile
