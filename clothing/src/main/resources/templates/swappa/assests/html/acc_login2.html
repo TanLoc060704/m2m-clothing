@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" th:href="@{/bootstrap-5.3.2-dist/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/assests/css/style.css}">
+    <link rel="stylesheet" th:href="@{/assests/css/login.css}">
+    <link rel="shortcut icon" th:href="@{/assests/srcPic/x.png}" type="image/x-icon">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+<div>
+    <div id="login-form" class="container d-flex justify-content-center align-items-center min-vh-100">
+        <div class="row">
+            <div class="login-card shadow p-4">
+                <div class="text-center mb-4">
+                    <h2>LOGIN</h2>
+                </div>
+                <div class="cps-login-form mt-3">
+                    <div id="loginForm" class="m-3">
+                        <div class="mb-3">
+                            <label for="email" class="form-label text-light">Email</label>
+                            <input type="text" class="form-control text-bg-dark" id="email" name="username" placeholder="Enter your email here" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label text-light">Password</label>
+                            <input type="password" class="form-control text-bg-dark" id="password" name="password" placeholder="Enter your password here" required>
+                        </div>
+                        <div class="text-end mb-4">
+                            <a href="/forgot-password" class="text-decoration-none text-light">Forgot Password?</a>
+                        </div>
+                        <button type="button" id="login" class="btn btn-success w-100">Log in</button>
+                    </div>
+                    <div class="line-through d-flex align-items-center mb-4">
+                        <hr class="flex-grow-1">
+                        <h5 class="mx-2 mb-0 text-light">or</h5>
+                        <hr class="flex-grow-1">
+                    </div>
+                    <div class="login-gg d-flex justify-content-around mb-4">
+                        <button class="btn btn-light d-flex align-items-center" onclick="window.location.href='/oauth2/authorization/google'">
+                            <img th:src="@{/assests/images/google-icon.png}" alt="google" class="me-2 small-img">
+                            <p class="mb-0">Continue with Google</p>
+                        </button>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <p class="me-2 mb-0 fw-bold">Haven't got an account yet?</p>
+                        <a href="/register" class="text-decoration-none text-light">Register</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="/bootstrap-5.3.2-dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://kit.fontawesome.com/c22bed0de0.js" crossorigin="anonymous"></script>
+<script src="/assests/js/app.js"></script>
+<script src="/assests/js/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://kit.fontawesome.com/c22bed0de0.js" crossorigin="anonymous"></script>
+<script>
+    $('#btnlogin').click(function () {
+        sessionStorage.setItem("tendn", $('#email').val());
+    })
+</script>
+<script src="/assests/js/Login.js"></script>
+</html>

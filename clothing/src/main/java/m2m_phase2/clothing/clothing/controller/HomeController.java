@@ -84,15 +84,8 @@ public class HomeController {
     }
 
     @GetMapping("/loginacount")
-    public String getLog(Model model) {
-        Account accountlog = new Account();
-        model.addAttribute("accountlog", accountlog);
-        return "swappa/assests/html/acc_login";
-    }
-
-    @PostMapping("/submitLogin")
-    public String submitLogin(@ModelAttribute("accountlog") Account accountRequest, Model model) throws SQLException {
-        return accountService.submitLogin(accountRequest, model);
+    public String getLog() {
+        return "swappa/assests/html/acc_login2";
     }
 
     @GetMapping("/userprofile")

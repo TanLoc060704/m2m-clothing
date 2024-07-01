@@ -10,6 +10,17 @@
     <link rel="stylesheet" href="/assests/css/userPage.css">
     <link rel="shortcut icon" href="/assests/srcPic/x.png" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <!-- External Scripts -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-js-package@1.0.4/qrcode.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://kit.fontawesome.com/c22bed0de0.js" crossorigin="anonymous"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=AUn8UV5sTafGqBu9Y6BAB9DKZlgUDgy534_sHcoYwifxkvIZsbpNfIjP0zU3H8u8XJEWTiw8UuzatRZC"></script>
+
 </head>
 
 <body style="background-color: rgb(18,17,13);">
@@ -313,20 +324,8 @@
 </div>
 <!-- footer -->
 <footer class="fixed-bottom" th:insert="~{swappa/assests/html/layout/_layout::footer}"></footer>
-
-<!-- External Scripts -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcode-js-package@1.0.4/qrcode.min.js"></script>
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="https://kit.fontawesome.com/c22bed0de0.js" crossorigin="anonymous"></script>
-<script src="https://www.paypal.com/sdk/js?client-id=AUn8UV5sTafGqBu9Y6BAB9DKZlgUDgy534_sHcoYwifxkvIZsbpNfIjP0zU3H8u8XJEWTiw8UuzatRZC"></script>
-
 <!-- Internal Scripts -->
 <script src="/bootstrap-5.3.2-dist/js/bootstrap.bundle.min.js"></script>
-<script src="/node_modules/angular/angular.min.js"></script>
 <script th:src="@{/assests/js/searchRcmd.js}"></script>
 <script th:src="@{/assests/js/paypalPayment.js}"></script>
 <script src="/assests/js/SignUpShop.js"></script>
@@ -427,6 +426,8 @@
         })
     });
 
+    let nameImg, path;
+
     function getSoLuongGioHang(){
         var tongsp = document.getElementById("tongSoLuongSP");
         var tongSoLuong = 0;
@@ -477,7 +478,7 @@
 
     function fetchOrders() {
         $.ajax({
-            url: '/api-product/orders',
+            url: '/api-product/getOrdersByUser',
             type: 'GET',
             success: function (data) {
                 data.forEach(function (order) {
@@ -490,7 +491,11 @@
                             </td>
                             <td class="text-center">${formattedDate}</td>
                             <td class="text-center">${order.phoneNumber}</td>
-                            <td class="text-center">${order.deliveryAddress}</td>
+                            <td class="text-center">
+                                <button class="btn btn-primary" onclick="showShippingAddressDetail('${order.deliveryAddress}')">
+                                    Show detail
+                                </button>
+                            </td>
                             <td class="text-center">
                                 <div class="badge text-bg-${order.paymentMethod.toLowerCase() === 'paypal' ? 'primary' : 'secondary'}">
                                     ${order.paymentMethod}
@@ -507,19 +512,30 @@
         });
     }
 
+    function showShippingAddressDetail(deliveryAddress) {
+        Swal.fire({
+            title: 'Shipping Address',
+            text: deliveryAddress
+        });
+    }
+
     function htmlForButton(order) {
         return (order.paymentMethod === 'Cod' || order.orderStatus === 'Delivering')
             ? ` <td class="text-center">
-                    <button class="btn btn-warning" onclick="receivedOrder(${order.orderCode})">Received</button>
+                    <button class="btn btn-warning" onclick="receivedOrder(${order.orderId})">Received</button>
                 </td>`
-            : ` <td class="text-center">
+            : (order.paymentMethod === 'Received')
+            ? ` <td class="text-center">
+                    <button class="btn btn-success" disabled>Finished</button>
+                </td>`
+            :` <td class="text-center">
                     <button class="btn btn-warning" ${order.orderStatus === 'Need approved' ? 'disabled' : ''} onclick="loadSwalForPaypalContainer(${order.orderId}, ${order.totalAmount})">
                         Pay now
                     </button>
                 </td>`;
     }
 
-    function receivedOrder(orderCode) {
+    function receivedOrder(orderId) {
         Swal.fire({
             title: 'Confirm Order Received',
             text: 'Are you sure you want to confirm that the order has been received?',
@@ -531,9 +547,20 @@
             cancelButtonText: 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Handle confirmed action (e.g., send confirmation to server)
-                Swal.fire('Confirmed!', 'The order has been marked as received.', 'success');
-                // Here you can add AJAX call or any other logic to handle confirmation
+                let payload = {
+                    idProduct: orderId,
+                    OrderStatus: 'Received'
+                }
+                axios.get("/api-product/updateOrderUser", payload)
+                    .then(response => {
+                        Swal.fire('Confirmed!', 'The order has been marked as received.', 'success')
+                            .then(result => {
+                                location.reload();
+                            });
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    })
             }
         });
     }
@@ -584,22 +611,6 @@
                 $('#previewImage').attr('src', event.target.result).show();
             }
             reader.readAsDataURL(file);
-        }
-    }
-
-    function generateQRCode() {
-        const data = $('#iduser').text();
-        const qrCodeElement = document.getElementById('qrcode');
-
-        if (data) {
-            new QRCode(qrCodeElement, {
-                text: data,
-                width: 128,
-                height: 128,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
         }
     }
 

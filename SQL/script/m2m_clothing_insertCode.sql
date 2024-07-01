@@ -1,13 +1,15 @@
 use m2m_clothing
 go
+-- INSERT INTO Account (username, email, hashed_password, is_admin)
+-- VALUES ('m2mClothing', 'kaisamaslain@gmail.com', '$2a$12$en5ZfBVuv44iqK6IktThDOUw3QYoKnbPpRymLs1o1Duc.cy4G7Hy.', 1);
 INSERT INTO Account (username, email, hashed_password, is_admin)
-VALUES ('john.doe', 'john.doe@example.com', 'your_hashed_password1', 0);
+VALUES ('khoa', 'vakhoa4875@gmail.com', '$2a$12$en5ZfBVuv44iqK6IktThDOUw3QYoKnbPpRymLs1o1Duc.cy4G7Hy.', 1);
 INSERT INTO Account (username, email, hashed_password, is_admin)
-VALUES ('jane.smith', 'jane.smith@example.com', 'your_hashed_password2', 0);
+VALUES ('phat.teacher', 'hieuphung2211@gmail.com', '$2a$12$en5ZfBVuv44iqK6IktThDOUw3QYoKnbPpRymLs1o1Duc.cy4G7Hy.', 1);
 INSERT INTO Account (username, email, hashed_password, is_admin)
-VALUES ('admin', 'admin@gmail.com', '$2a$12$en5ZfBVuv44iqK6IktThDOUw3QYoKnbPpRymLs1o1Duc.cy4G7Hy.', 1);
+VALUES ('ho.phat', 'hophat321@gmail.com', '$2a$12$qTSuT5h7Y3tsXQ/YO63iEecCyKmu.Bgg0K6Lr.lktxdAwxc8MhJE6', 1);
 INSERT INTO Account (username, email, hashed_password, is_admin)
-VALUES ('site_user', 'abc@gmail.com', '$2a$12$qTSuT5h7Y3tsXQ/YO63iEecCyKmu.Bgg0K6Lr.lktxdAwxc8MhJE6', 0);
+VALUES ('m2mClothing.official', 'phatnhps29018@fpt.edu.vn', '$2a$12$qTSuT5h7Y3tsXQ/YO63iEecCyKmu.Bgg0K6Lr.lktxdAwxc8MhJE6', 0);
 go
 
 INSERT INTO Category (category_name, logo, description)
@@ -830,11 +832,11 @@ VALUES (N'That shirt is so beautiful', 1, 1, N'2024-04-15'),
 
 
 INSERT INTO Voucher (voucher_name, reduce, quantity, start_day, end_day)
-VALUES (N'Mã giảm giá Xuân', 15, 15, '2024-03-01', '2024-03-31'),
-       (N'Mã giảm giá Hạ', 10, 15, '2024-06-01', '2024-08-31'),
-       (N'Mã giảm giá Thu', 20, 15, '2024-09-01', '2024-11-30'),
-       (N'Mã giảm giá Đông', 25, 15, '2024-12-01', '2025-02-28'),
-       (N'Mã giảm giá Tết', 30, 15, '2025-01-01', '2025-01-31');
+VALUES (N'Spring flowering', 15, 15, '2024-03-01', '2024-07-31'),
+       (N'Summer hot hot', 10, 15, '2024-06-01', '2024-08-30'),
+       (N'Autumn chill chill', 20, 15, '2024-09-01', '2024-11-30'),
+       (N'Winter on ice', 25, 15, '2024-12-01', '2025-02-28'),
+       (N'Happy lunar new year', 30, 15, '2025-01-01', '2025-01-30');
 
 INSERT INTO voucher_details
 VALUES (1, 1),

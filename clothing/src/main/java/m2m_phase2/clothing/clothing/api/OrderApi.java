@@ -23,17 +23,9 @@ public class OrderApi {
     private OrderDetailService orderDetailService;
     @Autowired
     private HttpSession session;
-//    @GetMapping
-//    public ResponseEntity<List<Order>> getAllOrders() {
-//        List<Order> orders = orderService.findAllOrders();
-//        if (orders.isEmpty()) {
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        }
-//        return new ResponseEntity<>(orders, HttpStatus.OK);
-//    }
 
-    @GetMapping("/orders")
-    public ResponseEntity<List<OrderDto>> getOrdersWithUsernameByCustomerEmail(HttpSession session) {
+    @GetMapping("/getOrdersByUser")
+    public ResponseEntity<List<OrderDto>> getOrdersWithUsernameByCustomerEmail() {
         String userEmail = (String) session.getAttribute("loggedInUser");
         if (userEmail == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -56,11 +48,10 @@ public class OrderApi {
             dto.setOrderStatus((String) obj[7]);
             dtos.add(dto);
         }
+        System.out.println(dtos);
 
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
-
-    ;
 
     @GetMapping("/ordersAllProctStatus")
     public ResponseEntity<?> getAllProctStatus() {
