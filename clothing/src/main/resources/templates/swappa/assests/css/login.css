@@ -25,4 +25,19 @@ body {
     background-color: rgba(139, 69, 19, var(--bs-bg-opacity)) !important;
     color: #fff !important;
 }
+.small-img {
+    width: 36px;
+    height: 36px;
+}
+.login-card {
+    width: 550px;
+    border: none;
+    border-radius: 10px;
+    background: hsla(0,0%,100%,0.1);
+    backdrop-filter: blur(50px);
+}
+.text-brown {
+    color: #7e5a4c;
+}
+
 

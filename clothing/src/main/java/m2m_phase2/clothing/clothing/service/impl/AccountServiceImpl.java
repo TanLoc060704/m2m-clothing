@@ -1,6 +1,7 @@
 package m2m_phase2.clothing.clothing.service.impl;
 
 import jakarta.mail.internet.MimeMessage;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import m2m_phase2.clothing.clothing.constant.AccountEnum;
@@ -20,6 +21,7 @@ import org.springframework.ui.Model;
 import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +34,9 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private JavaMailSender emailSender;
     private final HttpSession session;
-//    private final UserService userService;
+    //    private final UserService userService;
+    @Autowired
+    private HttpServletRequest request;
 
     @Override
     public Account saveAccount(Account account) {
@@ -53,7 +57,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void sendOTPEmail(String toEmail, String otp,String subject) {
+    public void sendOTPEmail(String toEmail, String otp, String subject) {
         try {
             MimeMessage message = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -155,66 +159,44 @@ public class AccountServiceImpl implements AccountService {
         return account != null && account.isDisable();
     }
 
-//	@Override
+    //	@Override
 //	public List<UserM> findAll() throws SQLException {
 //		List<Account> listAccount = repo.findAll();
 //		return UserM.convertListAccountToListUserM(listAccount);
 //	}
+    @Override
+    public String sendUrl(String token) {
+        String baseUrl = String.format("%s://%s:%d", request.getScheme(), request.getServerName(), request.getServerPort());
+        String resetPasswordUrl = baseUrl + "/confirmPasswordForgot/" + token;
+        return resetPasswordUrl;
+    }
+
+    public static String token;
 
     @Override
-    public void sendLinkEmail(String toEmail, String resetPasswordUrl) {
+    public void sendLinkEmail(String toEmail) {
         try {
             MimeMessage message = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
+            token = UUID.randomUUID().toString();
+            String resetPasswordUrl = sendUrl(token);
+
             helper.setFrom("kaisamaslain+Nerdyers@gmail.com");
             helper.setTo(toEmail);
-            helper.setSubject("Đường link để lấy lại mật khẩu !!!");
-            helper.setText("Vui lòng nhấp vào đường link sau để đặt lại mật khẩu: " + resetPasswordUrl);
+            helper.setSubject("Link to reset password");
+            String htmlMsg = "<h3>Hello,</h3>"
+                    + "<p>You requested a password reset. Please click the link below to change your password:</p>"
+                    + "<a href='" + resetPasswordUrl + "'>Reset Password</a>"
+                    + "<p>If you didn’t ask to change your password, you can ignore this email.</p>"
+                    + "<p>Thanks,</p>"
+                    + "<p>Your Team</p>";
+
+            helper.setText(htmlMsg, true);
             emailSender.send(message);
-            session.setAttribute("resetPasswordUrl", resetPasswordUrl); // Lưu đường dẫn vào session
-            session.setAttribute("email", toEmail);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public String sendUrl() {
-
-        String resetPasswordUrl = "/ConfirmPassword-Forgot-mk";
-        return resetPasswordUrl;
-    }
-
-    @Override
-    public String submitLogin(Account accountRequest, Model model) throws SQLException {
-        String email = accountRequest.getEmail();
-        String password = accountRequest.getHashedPassword();
-
-        Account existingAccount = repo.findByemail(email);
-        if (existingAccount == null) {
-            model.addAttribute("error", "Tài khoản không tồn tại");
-            return "swappa/assests/html/acc_login";
-        }
-        boolean passwordMatch = PasswordEncoderUtil.verifyPassword(password, existingAccount.getHashedPassword());
-        if (!passwordMatch) {
-            model.addAttribute("error", "Mật khẩu không đúng");
-            return "swappa/assests/html/acc_login";
-        }
-        // Kiểm tra xem tài khoản có bị vô hiệu hóa không
-        if (existingAccount.isDisable()) {
-            model.addAttribute("error", "Tài khoản của bạn tạm thời bị vô hiệu hóa");
-            return "swappa/assests/html/acc_login";
-        }
-        // Lưu thông tin đăng nhập vào session hoặc làm bất kỳ xử lý nào khác cần thiết
-        session.setAttribute("loggedInUser", accountRequest.getEmail());
-        StaticVariable.sessionEmail = accountRequest.getEmail();
-        model.addAttribute("iduser", existingAccount.getUserId());
-        model.addAttribute("email", existingAccount.getEmail());
-        session.setAttribute("iduser", existingAccount.getUserId());
-        session.setAttribute("email", existingAccount.getEmail());
-        PasswordEncoderUtil.email = accountRequest.getEmail();
-        return "redirect:/";
     }
 
     @Override

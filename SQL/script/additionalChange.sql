@@ -41,7 +41,7 @@ add order_code nvarchar(127) unique ;
 --! create table order_detail
 -- template data for shop
 insert into Shop(logo, name_shop, date_established, id) values
-    ('m2mlogo.png', 'm2mClothing.official', '2024-05-25', 3)
+    ('img.png', 'm2mClothing.official', '2024-05-25', 3)
 go
 --! template data for shop
 -- thong ke voucher
