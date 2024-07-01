@@ -8,6 +8,10 @@ spring:
     password: Tanloc0607@
     url: jdbc:sqlserver://tanlocclothing.database.windows.net:1433;database=tanlocclothing;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
     username: tanlocadmin
+    jpa:
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.SQLServerDialect
   mail:
     host: smtp.gmail.com
     password: oanxsumpkcoisyrx
